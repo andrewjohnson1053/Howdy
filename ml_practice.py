@@ -99,3 +99,67 @@ dot_plus = StringIO()
 export_graphviz(model,out_file=dot_plus,filled=True,rounded=True,special_characters=True)
 graph = pydotplus.graph_from_dot_data(dot_plus.getvalue())
 graph.write_png('tree.png')
+
+
+"""Diffie-Hellman"""
+
+#private constants
+a=3
+b=7
+#public constants
+g=17
+n=93
+
+x=int(pow(g, a, n))
+y=int(pow(g, b, n))
+print("X: ", x, "Y: ", y)
+
+#after exchange is done
+
+ssx=int(pow(y, a, n))
+ssy=int(pow(x, b, n))
+
+print("generated shared secret :", "ssx: ", ssx, "ssy: ", ssy)
+
+"""RSA"""
+#take (17, 23) for p and q always
+
+def gcd(a,b):
+    if b==0:
+        return a
+    else:
+        return gcd(b, a%b)
+
+
+p = int(input("enter value of p: "))
+q = int(input("enter value of q: "))
+pt= input("enter plain text: ")
+
+n=p*q
+t= (p-1)(q-1)
+
+for e in range(2, t):
+    if gcd(e, t)==1:
+        break
+
+for d in range(1, t):
+    if e*d%t==1:
+        break
+
+l=[]
+s1=" "
+
+for i in pt:
+    ctt=pow(ord(i), e)
+    ct = ctt%n
+    l.append(ct)
+
+for j in range(len(l)):
+    dtt=pow(l[i],d)
+    dt=dtt%n
+    s1 += chr(dt)
+
+print("plain text: ", pt)
+print("cipher text: ", l)
+print("original text: ", s1)
+
